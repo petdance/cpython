@@ -557,7 +557,7 @@ static stmt_ty ast_for_for_stmt(struct compiling *, const node *, bool);
 static expr_ty ast_for_call(struct compiling *, const node *, expr_ty,
                             const node *, const node *, const node *);
 
-static PyObject *parsenumber(struct compiling *, const char *);
+static PyObject *parsenumber(const char *);
 static expr_ty parsestrplus(struct compiling *, const node *n);
 static void get_last_end_pos(asdl_seq *, int *, int *);
 
@@ -1196,7 +1196,7 @@ ast_for_augassign(struct compiling *c, const node *n)
 }
 
 static cmpop_ty
-ast_for_comp_op(struct compiling *c, const node *n)
+ast_for_comp_op(const node *n)
 {
     /* comp_op: '<'|'>'|'=='|'>='|'<='|'!='|'in'|'not' 'in'|'is'
                |'is' 'not'
@@ -1924,7 +1924,7 @@ ast_for_ifexpr(struct compiling *c, const node *n)
 */
 
 static int
-count_comp_fors(struct compiling *c, const node *n)
+count_comp_fors(const node *n)
 {
     int n_fors = 0;
 
@@ -1974,7 +1974,7 @@ count_comp_fors(struct compiling *c, const node *n)
 */
 
 static int
-count_comp_ifs(struct compiling *c, const node *n)
+count_comp_ifs(const node *n)
 {
     int n_ifs = 0;
 
@@ -1997,7 +1997,7 @@ ast_for_comprehension(struct compiling *c, const node *n)
     int i, n_fors;
     asdl_seq *comps;
 
-    n_fors = count_comp_fors(c, n);
+    n_fors = count_comp_fors(n);
     if (n_fors == -1)
         return NULL;
 
@@ -2059,7 +2059,7 @@ ast_for_comprehension(struct compiling *c, const node *n)
             asdl_seq *ifs;
 
             n = CHILD(sync_n, 4);
-            n_ifs = count_comp_ifs(c, n);
+            n_ifs = count_comp_ifs(n);
             if (n_ifs == -1)
                 return NULL;
 
@@ -2334,7 +2334,7 @@ ast_for_atom(struct compiling *c, const node *n)
                       "Underscores in numeric literals are only supported in Python 3.6 and greater");
             return NULL;
         }
-        pynum = parsenumber(c, STR(ch));
+        pynum = parsenumber(STR(ch));
         if (!pynum)
             return NULL;
 
@@ -2826,7 +2826,7 @@ ast_for_expr(struct compiling *c, const node *n)
                 for (i = 1; i < NCH(n); i += 2) {
                     cmpop_ty newoperator;
 
-                    newoperator = ast_for_comp_op(c, CHILD(n, i));
+                    newoperator = ast_for_comp_op(CHILD(n, i));
                     if (!newoperator) {
                         return NULL;
                     }
@@ -4458,9 +4458,10 @@ ast_for_stmt(struct compiling *c, const node *n)
 }
 
 static PyObject *
-parsenumber_raw(struct compiling *c, const char *s)
+parsenumber_raw(const char *s)
 {
     const char *end;
+    char *new_end;
     long x;
     double dx;
     Py_complex compl;
@@ -4470,23 +4471,25 @@ parsenumber_raw(struct compiling *c, const char *s)
     errno = 0;
     end = s + strlen(s) - 1;
     imflag = *end == 'j' || *end == 'J';
+
     if (s[0] == '0') {
-        x = (long) PyOS_strtoul(s, (char **)&end, 0);
+        x = (long) PyOS_strtoul(s, &new_end, 0);
         if (x < 0 && errno == 0) {
             return PyLong_FromString(s, (char **)0, 0);
         }
     }
     else
-        x = PyOS_strtol(s, (char **)&end, 0);
-    if (*end == '\0') {
+        x = PyOS_strtol(s, &new_end, 0);
+    if (*new_end == '\0') {
         if (errno != 0)
             return PyLong_FromString(s, (char **)0, 0);
         return PyLong_FromLong(x);
     }
     /* XXX Huge floats may silently fail */
     if (imflag) {
+        char *unused;
         compl.real = 0.;
-        compl.imag = PyOS_string_to_double(s, (char **)&end, NULL);
+        compl.imag = PyOS_string_to_double(s, &unused, NULL);
         if (compl.imag == -1.0 && PyErr_Occurred())
             return NULL;
         return PyComplex_FromCComplex(compl);
@@ -4501,7 +4504,7 @@ parsenumber_raw(struct compiling *c, const char *s)
 }
 
 static PyObject *
-parsenumber(struct compiling *c, const char *s)
+parsenumber(const char *s)
 {
     char *dup, *end;
     PyObject *res = NULL;
@@ -4509,7 +4512,7 @@ parsenumber(struct compiling *c, const char *s)
     assert(s != NULL);
 
     if (strchr(s, '_') == NULL) {
-        return parsenumber_raw(c, s);
+        return parsenumber_raw(s);
     }
     /* Create a duplicate without underscores. */
     dup = PyMem_Malloc(strlen(s) + 1);
@@ -4523,13 +4526,13 @@ parsenumber(struct compiling *c, const char *s)
         }
     }
     *end = '\0';
-    res = parsenumber_raw(c, dup);
+    res = parsenumber_raw(dup);
     PyMem_Free(dup);
     return res;
 }
 
 static PyObject *
-decode_utf8(struct compiling *c, const char **sPtr, const char *end)
+decode_utf8(const char **sPtr, const char *end)
 {
     const char *s, *t;
     t = s = *sPtr;
@@ -4599,7 +4602,7 @@ decode_unicode_with_escapes(struct compiling *c, const node *n, const char *s,
             int kind;
             void *data;
             Py_ssize_t len, i;
-            w = decode_utf8(c, &s, end);
+            w = decode_utf8(&s, end);
             if (w == NULL) {
                 Py_DECREF(u);
                 return NULL;
