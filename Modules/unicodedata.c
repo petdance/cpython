@@ -625,15 +625,17 @@ nfd_nfkd(PyObject *self, PyObject *input, int k)
 static int
 find_nfc_index(const struct reindex* nfc, Py_UCS4 code)
 {
-    unsigned int index;
-    for (index = 0; nfc[index].start; index++) {
-        unsigned int start = nfc[index].start;
+    const struct reindex *p = nfc;
+
+    while (p->start) {
+        unsigned int start = p->start;
         if (code < start)
             return -1;
-        if (code <= start + nfc[index].count) {
+        if (code <= start + p->count) {
             unsigned int delta = code - start;
-            return nfc[index].index + delta;
+            return p->index + delta;
         }
+        p++;
     }
     return -1;
 }
