@@ -13,72 +13,72 @@ PyMember_GetOne(const char *addr, PyMemberDef *l)
     addr += l->offset;
     switch (l->type) {
     case T_BOOL:
-        v = PyBool_FromLong(*(char*)addr);
+        v = PyBool_FromLong(*addr);
         break;
     case T_BYTE:
-        v = PyLong_FromLong(*(char*)addr);
+        v = PyLong_FromLong(*addr);
         break;
     case T_UBYTE:
-        v = PyLong_FromUnsignedLong(*(unsigned char*)addr);
+        v = PyLong_FromUnsignedLong(*(const unsigned char*)addr);
         break;
     case T_SHORT:
-        v = PyLong_FromLong(*(short*)addr);
+        v = PyLong_FromLong(*(const short*)addr);
         break;
     case T_USHORT:
-        v = PyLong_FromUnsignedLong(*(unsigned short*)addr);
+        v = PyLong_FromUnsignedLong(*(const unsigned short*)addr);
         break;
     case T_INT:
-        v = PyLong_FromLong(*(int*)addr);
+        v = PyLong_FromLong(*(const int*)addr);
         break;
     case T_UINT:
-        v = PyLong_FromUnsignedLong(*(unsigned int*)addr);
+        v = PyLong_FromUnsignedLong(*(const unsigned int*)addr);
         break;
     case T_LONG:
-        v = PyLong_FromLong(*(long*)addr);
+        v = PyLong_FromLong(*(const long*)addr);
         break;
     case T_ULONG:
-        v = PyLong_FromUnsignedLong(*(unsigned long*)addr);
+        v = PyLong_FromUnsignedLong(*(const unsigned long*)addr);
         break;
     case T_PYSSIZET:
-        v = PyLong_FromSsize_t(*(Py_ssize_t*)addr);
+        v = PyLong_FromSsize_t(*(const Py_ssize_t*)addr);
         break;
     case T_FLOAT:
-        v = PyFloat_FromDouble((double)*(float*)addr);
+        v = PyFloat_FromDouble((double)*(const float*)addr);
         break;
     case T_DOUBLE:
-        v = PyFloat_FromDouble(*(double*)addr);
+        v = PyFloat_FromDouble(*(const double*)addr);
         break;
     case T_STRING:
-        if (*(char**)addr == NULL) {
+        if (*(char* const *)addr == NULL) {
             Py_INCREF(Py_None);
             v = Py_None;
         }
         else
-            v = PyUnicode_FromString(*(char**)addr);
+            v = PyUnicode_FromString(*(const char* const *)addr);
         break;
     case T_STRING_INPLACE:
-        v = PyUnicode_FromString((char*)addr);
+        v = PyUnicode_FromString(addr);
         break;
     case T_CHAR:
-        v = PyUnicode_FromStringAndSize((char*)addr, 1);
+        v = PyUnicode_FromStringAndSize(addr, 1);
         break;
     case T_OBJECT:
-        v = *(PyObject **)addr;
+        v = *(PyObject * const *)addr;
         if (v == NULL)
             v = Py_None;
         Py_INCREF(v);
         break;
     case T_OBJECT_EX:
-        v = *(PyObject **)addr;
+        v = *(PyObject * const *)addr;
         if (v == NULL)
             PyErr_SetString(PyExc_AttributeError, l->name);
         Py_XINCREF(v);
         break;
     case T_LONGLONG:
-        v = PyLong_FromLongLong(*(long long *)addr);
+        v = PyLong_FromLongLong(*(const long long *)addr);
         break;
     case T_ULONGLONG:
-        v = PyLong_FromUnsignedLongLong(*(unsigned long long *)addr);
+        v = PyLong_FromUnsignedLongLong(*(const unsigned long long *)addr);
         break;
     case T_NONE:
         v = Py_None;
