@@ -284,15 +284,20 @@ equiv_format(const Py_buffer *dest, const Py_buffer *src)
     const char *dfmt, *sfmt;
 
     assert(dest->format && src->format);
-    dfmt = dest->format[0] == '@' ? dest->format+1 : dest->format;
-    sfmt = src->format[0] == '@' ? src->format+1 : src->format;
 
-    if (strcmp(dfmt, sfmt) != 0 ||
-        dest->itemsize != src->itemsize) {
+    if (dest->itemsize != src->itemsize) {
         return 0;
     }
 
-    return 1;
+    dfmt = dest->format;
+    if (*dfmt == '@')
+        ++dfmt;
+
+    sfmt = src->format;
+    if (*sfmt == '@')
+        ++sfmt;
+
+    return (strcmp(dfmt, sfmt) == 0);
 }
 
 /* Two shapes are equivalent if they are either equal or identical up
