@@ -189,7 +189,7 @@ INT_TYPE_CONVERTER_FUNC(lzma_match_finder, lzma_mf_converter)
 static void *
 parse_filter_spec_lzma(PyObject *spec)
 {
-    static char *optnames[] = {"id", "preset", "dict_size", "lc", "lp",
+    static const char *optnames[] = {"id", "preset", "dict_size", "lc", "lp",
                                "pb", "mode", "nice_len", "mf", "depth", NULL};
     PyObject *id;
     PyObject *preset_obj;
@@ -244,7 +244,7 @@ parse_filter_spec_lzma(PyObject *spec)
 static void *
 parse_filter_spec_delta(PyObject *spec)
 {
-    static char *optnames[] = {"id", "dist", NULL};
+    static const char *optnames[] = {"id", "dist", NULL};
     PyObject *id;
     uint32_t dist = 1;
     lzma_options_delta *options;
@@ -267,7 +267,7 @@ parse_filter_spec_delta(PyObject *spec)
 static void *
 parse_filter_spec_bcj(PyObject *spec)
 {
-    static char *optnames[] = {"id", "start_offset", NULL};
+    static const char *optnames[] = {"id", "start_offset", NULL};
     PyObject *id;
     uint32_t start_offset = 0;
     lzma_options_bcj *options;
@@ -701,7 +701,7 @@ For one-shot compression, use the compress() function instead.
 static int
 Compressor_init(Compressor *self, PyObject *args, PyObject *kwargs)
 {
-    static char *arg_names[] = {"format", "check", "preset", "filters", NULL};
+    static const char *arg_names[] = {"format", "check", "preset", "filters", NULL};
     int format = FORMAT_XZ;
     int check = -1;
     uint32_t preset = LZMA_PRESET_DEFAULT;

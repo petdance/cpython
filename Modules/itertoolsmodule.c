@@ -2098,7 +2098,7 @@ product_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     Py_ssize_t i;
 
     if (kwds != NULL) {
-        char *kwlist[] = {"repeat", 0};
+        static const char *kwlist[] = {"repeat", 0};
         PyObject *tmpargs = PyTuple_New(0);
         if (tmpargs == NULL)
             return NULL;
@@ -4231,7 +4231,7 @@ repeat_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     repeatobject *ro;
     PyObject *element;
     Py_ssize_t cnt = -1, n_args;
-    static char *kwargs[] = {"object", "times", NULL};
+    static const char *kwargs[] = {"object", "times", NULL};
 
     n_args = PyTuple_GET_SIZE(args);
     if (kwds != NULL)

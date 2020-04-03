@@ -1145,7 +1145,7 @@ new_mmap_object(PyTypeObject *type, PyObject *args, PyObject *kwdict)
     int fd, flags = MAP_SHARED, prot = PROT_WRITE | PROT_READ;
     int devzero = -1;
     int access = (int)ACCESS_DEFAULT;
-    static char *keywords[] = {"fileno", "length",
+    static const char *keywords[] = {"fileno", "length",
                                "flags", "prot",
                                "access", "offset", NULL};
 
@@ -1323,7 +1323,7 @@ new_mmap_object(PyTypeObject *type, PyObject *args, PyObject *kwdict)
     HANDLE fh = 0;
     int access = (access_mode)ACCESS_DEFAULT;
     DWORD flProtect, dwDesiredAccess;
-    static char *keywords[] = { "fileno", "length",
+    static const char *keywords[] = { "fileno", "length",
                                 "tagname",
                                 "access", "offset", NULL };
 

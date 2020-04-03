@@ -9250,7 +9250,7 @@ posix_sendfile(PyObject *self, PyObject *args, PyObject *kwdict)
     off_t sbytes;
     struct sf_hdtr sf;
     int flags = 0;
-    static char *keywords[] = {"out_fd", "in_fd",
+    static const char *keywords[] = {"out_fd", "in_fd",
                                 "offset", "count",
                                 "headers", "trailers", "flags", NULL};
 

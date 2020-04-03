@@ -2469,7 +2469,7 @@ bytes_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyObject *new = NULL;
     PyObject *func;
     Py_ssize_t size;
-    static char *kwlist[] = {"source", "encoding", "errors", 0};
+    static const char *kwlist[] = {"source", "encoding", "errors", 0};
 
     if (type != &PyBytes_Type)
         return bytes_subtype_new(type, args, kwds);

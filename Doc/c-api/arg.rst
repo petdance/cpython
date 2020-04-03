@@ -433,7 +433,7 @@ API Functions
    than a variable number of arguments.
 
 
-.. c:function:: int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
+.. c:function:: int PyArg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, const char *keywords[], ...)
 
    Parse the parameters of a function that takes both positional and keyword
    parameters into local variables.  The *keywords* argument is a
@@ -447,7 +447,7 @@ API Functions
       <positional-only_parameter>`.
 
 
-.. c:function:: int PyArg_VaParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], va_list vargs)
+.. c:function:: int PyArg_VaParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, const char *keywords[], va_list vargs)
 
    Identical to :c:func:`PyArg_ParseTupleAndKeywords`, except that it accepts a
    va_list rather than a variable number of arguments.

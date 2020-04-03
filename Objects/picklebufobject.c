@@ -71,10 +71,10 @@ picklebuf_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     PyPickleBufferObject *self;
     PyObject *base;
-    char *keywords[] = {"", NULL};
+    static const char *kwlist[] = {"", NULL};
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:PickleBuffer",
-                                     keywords, &base)) {
+                                     kwlist, &base)) {
         return NULL;
     }
 

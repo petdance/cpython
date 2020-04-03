@@ -1026,7 +1026,7 @@ get_source_line(PyObject *module_globals, int lineno)
 static PyObject *
 warnings_warn_explicit(PyObject *self, PyObject *args, PyObject *kwds)
 {
-    static char *kwd_list[] = {"message", "category", "filename", "lineno",
+    static const char *kwlist[] = {"message", "category", "filename", "lineno",
                                 "module", "registry", "module_globals",
                                 "source", 0};
     PyObject *message;
@@ -1041,7 +1041,7 @@ warnings_warn_explicit(PyObject *self, PyObject *args, PyObject *kwds)
     PyObject *returned;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUi|OOOO:warn_explicit",
-                kwd_list, &message, &category, &filename, &lineno, &module,
+                kwlist, &message, &category, &filename, &lineno, &module,
                 &registry, &module_globals, &sourceobj))
         return NULL;
 

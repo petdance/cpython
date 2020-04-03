@@ -16,9 +16,9 @@ int PyArg_ParseTuple(PyObject *, const char *, ...);
 int PyArg_VaParse(PyObject *, const char *, va_list);
 
 int PyArg_ParseTupleAndKeywords(PyObject *, PyObject *,
-                                const char *, char **, ...);
+                                const char *, const char **, ...);
 int PyArg_VaParseTupleAndKeywords(PyObject *, PyObject *,
-                                const char *, char **, va_list);
+                                const char *, const char **, va_list);
 
 int _PyArg_ParseTupleAndKeywordsFast(PyObject *, PyObject *,
                                             struct _PyArg_Parser *, ...);
@@ -85,7 +85,7 @@ static Py_ssize_t convertbuffer(PyObject *, const void **p, const char **);
 static int getbuffer(PyObject *, Py_buffer *, const char**);
 
 static int vgetargskeywords(PyObject *, PyObject *,
-                            const char *, char **, va_list *, int);
+                            const char *, const char **, va_list *, int);
 static int vgetargskeywordsfast(PyObject *, PyObject *,
                             struct _PyArg_Parser *, va_list *, int);
 static int vgetargskeywordsfast_impl(PyObject *const *args, Py_ssize_t nargs,
@@ -1446,7 +1446,7 @@ int
 PyArg_ParseTupleAndKeywords(PyObject *args,
                             PyObject *keywords,
                             const char *format,
-                            char **kwlist, ...)
+                            const char **kwlist, ...)
 {
     int retval;
     va_list va;
@@ -1470,7 +1470,7 @@ PyAPI_FUNC(int)
 _PyArg_ParseTupleAndKeywords_SizeT(PyObject *args,
                                   PyObject *keywords,
                                   const char *format,
-                                  char **kwlist, ...)
+                                  const char **kwlist, ...)
 {
     int retval;
     va_list va;
@@ -1496,7 +1496,7 @@ int
 PyArg_VaParseTupleAndKeywords(PyObject *args,
                               PyObject *keywords,
                               const char *format,
-                              char **kwlist, va_list va)
+                              const char **kwlist, va_list va)
 {
     int retval;
     va_list lva;
@@ -1521,7 +1521,7 @@ PyAPI_FUNC(int)
 _PyArg_VaParseTupleAndKeywords_SizeT(PyObject *args,
                                     PyObject *keywords,
                                     const char *format,
-                                    char **kwlist, va_list va)
+                                    const char **kwlist, va_list va)
 {
     int retval;
     va_list lva;
@@ -1643,7 +1643,7 @@ PyArg_ValidateKeywordArguments(PyObject *kwargs)
 
 static int
 vgetargskeywords(PyObject *args, PyObject *kwargs, const char *format,
-                 char **kwlist, va_list *p_va, int flags)
+                 const char **kwlist, va_list *p_va, int flags)
 {
     char msgbuf[512];
     int levels[32];

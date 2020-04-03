@@ -66,7 +66,7 @@ interp_id_converter(PyObject *arg, void *ptr)
 static PyObject *
 interpid_new(PyTypeObject *cls, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"id", "force", NULL};
+    static const char *kwlist[] = {"id", "force", NULL};
     int64_t id;
     int force = 0;
     if (!PyArg_ParseTupleAndKeywords(args, kwds,
