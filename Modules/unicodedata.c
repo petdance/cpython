@@ -627,8 +627,8 @@ find_nfc_index(const struct reindex* nfc, Py_UCS4 code)
 {
     const struct reindex *p = nfc;
 
-    while (p->start) {
-        unsigned int start = p->start;
+    unsigned int start;
+    while ((start = p->start)) {
         if (code < start)
             return -1;
         if (code <= start + p->count) {
